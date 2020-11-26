@@ -71,3 +71,72 @@ Create the name of the stackstorm-ha service account to use
 {{ $mongo_fullname }}-{{ $index0 }}.{{ $mongo_fullname }}{{ if ne $index1 $replicas }},{{ end }}
   {{- end -}}
 {{- end -}}
+
+# For custom st2packs-Container reduce duplicity by defining it here once
+{{- define "packs-volumes" -}}
+{{- if .Values.st2.packs.images }}
+{{- if .Values.st2.packs.persistentVolumes }}
+- name: st2-packs-vol
+  persistentVolumeClaim:
+    claimName: 'st2-packs-pvol'
+- name: st2-virtualenvs-vol
+  persistentVolumeClaim:
+    claimName: 'st2-venv-pvol'
+{{- else }}
+- name: st2-packs-vol
+  emptyDir: {}
+- name: st2-virtualenvs-vol
+  emptyDir: {}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+# For custom st2packs-initContainers reduce duplicity by defining them here once
+# Merge packs and virtualenvs from st2 with those from st2packs images
+# rsync's option "--delete" is required to cleanup files when using persistent storage (PersistentVolume/NFS)
+# Otherwise old packs and pack-contents would reside and still be available in StackStorm, even if not desired
+{{- define "packs-initContainers" -}}
+{{- if $.Values.st2.packs.images }}
+  {{- range $.Values.st2.packs.images }}
+- name: 'st2-custom-pack-{{ printf "%s-%s-%s" .repository .name .tag | sha1sum }}'
+  image: "{{ .repository }}/{{ .name }}:{{ .tag }}"
+  imagePullPolicy: {{ .pullPolicy | quote }}
+  volumeMounts:
+  - name: st2-packs-vol
+    mountPath: /opt/stackstorm/packs-shared
+  - name: st2-virtualenvs-vol
+    mountPath: /opt/stackstorm/virtualenvs-shared
+  command:
+    - 'sh'
+    - '-ec'
+    - |
+      /usr/bin/rsync -a --delete /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
+      /usr/bin/rsync -a --delete /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
+  {{- end }}
+# System packs
+- name: st2-system-packs
+  image: "{{ template "imageRepository" . }}/st2actionrunner{{ template "enterpriseSuffix" . }}:{{ .Chart.AppVersion }}"
+  imagePullPolicy: {{ .Values.image.pullPolicy }}
+  volumeMounts:
+  - name: st2-packs-vol
+    mountPath: /opt/stackstorm/packs-shared
+  - name: st2-virtualenvs-vol
+    mountPath: /opt/stackstorm/virtualenvs-shared
+  command:
+    - 'sh'
+    - '-ec'
+    - |
+      /usr/bin/rsync -a --delete /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
+      /usr/bin/rsync -a --delete /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
+  {{- end }}
+{{- end -}}
+
+
+# For custom st2packs-pullSecrets reduce duplicity by defining them here once
+{{- define "packs-pullSecrets" -}}
+  {{- range $.Values.st2.packs.images }}
+    {{- if .pullSecret }}
+- name: {{ .pullSecret }}
+    {{- end }}
+  {{- end }}
+{{- end -}}
