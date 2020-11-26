@@ -1,5 +1,5 @@
 # This is only used, when user wants to share packs & venvs via persistentVolumes
-{{- if and .Values.st2.packs.image.repository .Values.st2.packs.persistentVolumes }}
+{{- if and .Values.st2.packs.images .Values.st2.packs.persistentVolumes }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

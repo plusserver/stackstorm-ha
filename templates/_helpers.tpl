@@ -78,7 +78,7 @@ Create the name of the stackstorm-ha service account to use
 
 # For custom st2packs-Container reduce duplicity by defining it here once
 {{- define "packs-volumes" -}}
-{{- if .Values.st2.packs.image.repository }}
+{{- if .Values.st2.packs.images }}
 {{- if .Values.st2.packs.persistentVolumes }}
 - name: st2-packs-vol
   persistentVolumeClaim:
@@ -96,12 +96,15 @@ Create the name of the stackstorm-ha service account to use
 {{- end -}}
 
 # For custom st2packs-initContainers reduce duplicity by defining them here once
+# Merge packs and virtualenvs from st2 with those from st2packs images
+# rsync's option "--delete" is required to cleanup files when using persistent storage (PersistentVolume/NFS)
+# Otherwise old packs and pack-contents would reside and still be available in StackStorm, even if not desired
 {{- define "packs-initContainers" -}}
-# Merge packs and virtualenvs from st2api with those from the st2.packs image
-# Custom packs
-- name: st2-custom-packs
-  image: "{{ .Values.st2.packs.image.repository }}/{{ .Values.st2.packs.image.name }}:{{ .Values.st2.packs.image.tag }}"
-  imagePullPolicy: {{ .Values.st2.packs.image.pullPolicy | quote }}
+{{- if $.Values.st2.packs.images }}
+  {{- range $.Values.st2.packs.images }}
+- name: 'st2-custom-pack-{{ printf "%s-%s-%s" .repository .name .tag | sha1sum }}'
+  image: "{{ .repository }}/{{ .name }}:{{ .tag }}"
+  imagePullPolicy: {{ .pullPolicy | quote }}
   volumeMounts:
   - name: st2-packs-vol
     mountPath: /opt/stackstorm/packs-shared
@@ -111,8 +114,9 @@ Create the name of the stackstorm-ha service account to use
     - 'sh'
     - '-ec'
     - |
-      /bin/cp -aR /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
-      /bin/cp -aR /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
+      /usr/bin/rsync -a --delete /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
+      /usr/bin/rsync -a --delete /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
+  {{- end }}
 # System packs
 - name: st2-system-packs
   image: "{{ template "imageRepository" . }}/st2actionrunner{{ template "enterpriseSuffix" . }}:{{ .Chart.AppVersion }}"
@@ -126,6 +130,17 @@ Create the name of the stackstorm-ha service account to use
     - 'sh'
     - '-ec'
     - |
-      /bin/cp -aR /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
-      /bin/cp -aR /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
+      /usr/bin/rsync -a --delete /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
+      /usr/bin/rsync -a --delete /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
+  {{- end }}
+{{- end -}}
+
+
+# For custom st2packs-pullSecrets reduce duplicity by defining them here once
+{{- define "packs-pullSecrets" -}}
+  {{- range $.Values.st2.packs.images }}
+    {{- if .pullSecret }}
+- name: {{ .pullSecret }}
+    {{- end }}
+  {{- end }}
 {{- end -}}

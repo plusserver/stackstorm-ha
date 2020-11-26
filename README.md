@@ -211,10 +211,12 @@ See [K8s documentation](https://kubernetes.io/docs/tasks/configure-pod-container
 # Create a Docker registry secret called 'st2packs-auth'
 kubectl create secret docker-registry st2packs-auth --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-password>
 ```
-Once secret created, reference its name in helm value: `st2.packs.image.pullSecret`.
+Once secret created, reference its name in helm value: `st2.packs.images[].pullSecret`.
 
 ### Share custom st2packs via PersistentVolume
 By using a PersistentVolume instead of sidecar container (the default) for custom st2packs, the actionrunner, sensor & api-containers will not be restarted on redeploying st2packs oder config maps.
+
+This works with any storages supporting ReadWriteMany (see https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes).
 
 For this you have to uncomment following section in values.yaml and provide your specific requirements:
 ```yaml
@@ -238,7 +240,7 @@ st2:
 ```
 Don't forget running Helm upgrade to apply new changes.
 
-The only container, that will be replaced on upgrade, is `job-st2-register-content`.
+The only container that will be replaced on upgrade is `job-st2-register-content`.
 
 This container will update Packs & VirtualEnvironments in PersistentVolumes & register them and any given pack configs in StackStorm, without any impact on running executions.
 
