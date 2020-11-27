@@ -7,6 +7,7 @@
 * Add `forceBoot` for `rabbitmq-ha` by default, to ensure cluster-redeployments do not fail due to unclean exits (#158) (by @moonrail)
 * Add option to define pull secret for st2 images (#162) (by @moonrail)
 * Add option for st2packs-PersistentVolumes to allow for seamless custom pack-updates without job-impact (#160) (by @moonrail)
+* Change st2packs definition to a list, to be able to support multiple st2packs containers (#160) (by @moonrail)
 
 ## v0.32.0
 * Fix a bug when datastore encrypted keys didn't work in scheduled rules. datastore_crypto_key is now shared with the ``st2scheduler`` pods (#148) (by @rahulshinde26)
