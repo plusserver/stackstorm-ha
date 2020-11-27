@@ -114,8 +114,8 @@ Create the name of the stackstorm-ha service account to use
     - 'sh'
     - '-ec'
     - |
-      /usr/bin/rsync -a --delete /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
-      /usr/bin/rsync -a --delete /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
+      /bin/cp -aR /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
+      /bin/cp -aR /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
   {{- end }}
 # System packs
 - name: st2-system-packs
@@ -130,8 +130,8 @@ Create the name of the stackstorm-ha service account to use
     - 'sh'
     - '-ec'
     - |
-      /usr/bin/rsync -a --delete /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
-      /usr/bin/rsync -a --delete /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
+      /bin/cp -aR /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
+      /bin/cp -aR /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
   {{- end }}
 {{- end -}}
 
