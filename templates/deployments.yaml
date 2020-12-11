@@ -188,6 +188,9 @@ spec:
         - name: st2-packs-vol
           mountPath: /opt/stackstorm/packs
           readOnly: true
+        - name: st2-pack-configs-vol
+          mountPath: /opt/stackstorm/configs
+          readOnly: true
         - name: st2-virtualenvs-vol
           mountPath: /opt/stackstorm/virtualenvs
           readOnly: true
@@ -926,6 +929,9 @@ spec:
         - name: st2-packs-vol
           mountPath: /opt/stackstorm/packs
           readOnly: true
+        - name: st2-pack-configs-vol
+          mountPath: /opt/stackstorm/configs
+          readOnly: true
         - name: st2-virtualenvs-vol
           mountPath: /opt/stackstorm/virtualenvs
           readOnly: true
@@ -1054,6 +1060,9 @@ spec:
         {{- if .Values.st2.packs.images }}
         - name: st2-packs-vol
           mountPath: /opt/stackstorm/packs
+          readOnly: true
+        - name: st2-pack-configs-vol
+          mountPath: /opt/stackstorm/configs
           readOnly: true
         - name: st2-virtualenvs-vol
           mountPath: /opt/stackstorm/virtualenvs
@@ -1294,8 +1303,6 @@ spec:
         - name: st2-rbac-mappings-vol
           mountPath: /opt/stackstorm/rbac/mappings/
         {{- end }}
-        - name: st2-pack-configs-vol
-          mountPath: /opt/stackstorm/configs/
         - name: st2client-config-vol
           mountPath: /root/.st2/
         - name: st2-ssh-key-vol
@@ -1309,6 +1316,9 @@ spec:
         {{- if .Values.st2.packs.images }}
         - name: st2-packs-vol
           mountPath: /opt/stackstorm/packs
+          readOnly: true
+        - name: st2-pack-configs-vol
+          mountPath: /opt/stackstorm/configs
           readOnly: true
         - name: st2-virtualenvs-vol
           mountPath: /opt/stackstorm/virtualenvs
@@ -1345,9 +1355,9 @@ spec:
           configMap:
             name: {{ .Release.Name }}-st2-rbac-mappings
         {{- end }}
-        - name: st2-pack-configs-vol
-          configMap:
-            name: {{ .Release.Name }}-st2-pack-configs
+        # - name: st2-pack-configs-vol
+        #   configMap:
+        #     name: {{ .Release.Name }}-st2-pack-configs
         - name: st2client-config-vol
           emptyDir:
             medium: Memory

@@ -19,6 +19,22 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: st2-pack-configs-pvol
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+{{ toYaml .Values.st2.packs.persistentVolumes.packs.resources | indent 4 }}
+{{- if .Values.st2.packs.persistentVolumes.packs.storageClassName }}
+  storageClassName: "{{ .Values.st2.packs.persistentVolumes.packs.storageClassName }}"
+{{- end }}
+# TODO: make own resource vars
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
   name: st2-venv-pvol
 spec:
   accessModes:

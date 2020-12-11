@@ -79,11 +79,16 @@ Create the name of the stackstorm-ha service account to use
 - name: st2-packs-vol
   persistentVolumeClaim:
     claimName: 'st2-packs-pvol'
+- name: st2-pack-configs-vol
+  persistentVolumeClaim:
+    claimName: 'st2-pack-configs-pvol'
 - name: st2-virtualenvs-vol
   persistentVolumeClaim:
     claimName: 'st2-venv-pvol'
 {{- else }}
 - name: st2-packs-vol
+  emptyDir: {}
+- name: st2-pack-configs-vol
   emptyDir: {}
 - name: st2-virtualenvs-vol
   emptyDir: {}
