@@ -14,6 +14,9 @@ spec:
 {{- if .Values.st2.packs.persistentVolumes.packs.storageClassName }}
   storageClassName: "{{ .Values.st2.packs.persistentVolumes.packs.storageClassName }}"
 {{- end }}
+{{- if .Values.st2.packs.persistentVolumes.packs.selector }}
+  selector: {{ toYaml .Values.st2.packs.persistentVolumes.packs.selector | nindent 4 }}
+{{- end }}
 
 ---
 apiVersion: v1
@@ -28,5 +31,8 @@ spec:
 {{ toYaml .Values.st2.packs.persistentVolumes.venvs.resources | indent 4 }}
 {{- if .Values.st2.packs.persistentVolumes.venvs.storageClassName }}
   storageClassName: "{{ .Values.st2.packs.persistentVolumes.venvs.storageClassName }}"
+{{- end }}
+{{- if .Values.st2.packs.persistentVolumes.venvs.selector }}
+  selector: {{ toYaml .Values.st2.packs.persistentVolumes.venvs.selector | nindent 4 }}
 {{- end }}
 {{- end }}

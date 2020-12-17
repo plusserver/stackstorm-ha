@@ -108,8 +108,14 @@ Create the name of the stackstorm-ha service account to use
   volumeMounts:
   - name: st2-packs-vol
     mountPath: /opt/stackstorm/packs-shared
+    {{- if $.Values.st2.packs.persistentVolumes.packs.subPath }}
+    subPath: {{ $.Values.st2.packs.persistentVolumes.packs.subPath }}
+    {{- end }}
   - name: st2-virtualenvs-vol
     mountPath: /opt/stackstorm/virtualenvs-shared
+    {{- if $.Values.st2.packs.persistentVolumes.venvs.subPath }}
+    subPath: {{ $.Values.st2.packs.persistentVolumes.venvs.subPath }}
+    {{- end }}
   command:
     - 'sh'
     - '-ec'
@@ -124,8 +130,14 @@ Create the name of the stackstorm-ha service account to use
   volumeMounts:
   - name: st2-packs-vol
     mountPath: /opt/stackstorm/packs-shared
+    {{- if $.Values.st2.packs.persistentVolumes.packs.subPath }}
+    subPath: {{ $.Values.st2.packs.persistentVolumes.packs.subPath }}
+    {{- end }}
   - name: st2-virtualenvs-vol
     mountPath: /opt/stackstorm/virtualenvs-shared
+    {{- if $.Values.st2.packs.persistentVolumes.venvs.subPath }}
+    subPath: {{ $.Values.st2.packs.persistentVolumes.venvs.subPath }}
+    {{- end }}
   command:
     - 'sh'
     - '-ec'

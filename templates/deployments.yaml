@@ -188,9 +188,15 @@ spec:
         - name: st2-packs-vol
           mountPath: /opt/stackstorm/packs
           readOnly: true
+          {{- if .Values.st2.packs.persistentVolumes.packs.subPath }}
+          subPath: {{ .Values.st2.packs.persistentVolumes.packs.subPath }}
+          {{- end }}
         - name: st2-virtualenvs-vol
           mountPath: /opt/stackstorm/virtualenvs
           readOnly: true
+          {{- if .Values.st2.packs.persistentVolumes.venvs.subPath }}
+          subPath: {{ .Values.st2.packs.persistentVolumes.venvs.subPath }}
+          {{- end }}
         {{- end }}
         resources:
 {{ toYaml .Values.st2api.resources | indent 10 }}
@@ -926,9 +932,15 @@ spec:
         - name: st2-packs-vol
           mountPath: /opt/stackstorm/packs
           readOnly: true
+          {{- if $.Values.st2.packs.persistentVolumes.packs.subPath }}
+          subPath: {{ $.Values.st2.packs.persistentVolumes.packs.subPath }}
+          {{- end }}
         - name: st2-virtualenvs-vol
           mountPath: /opt/stackstorm/virtualenvs
           readOnly: true
+          {{- if $.Values.st2.packs.persistentVolumes.venvs.subPath }}
+          subPath: {{ $.Values.st2.packs.persistentVolumes.venvs.subPath }}
+          {{- end }}
         {{- end }}
         {{- if $.Values.secrets.st2.datastore_crypto_key }}
         - name: st2-encryption-key-vol
@@ -1055,9 +1067,15 @@ spec:
         - name: st2-packs-vol
           mountPath: /opt/stackstorm/packs
           readOnly: true
+          {{- if .Values.st2.packs.persistentVolumes.packs.subPath }}
+          subPath: {{ .Values.st2.packs.persistentVolumes.packs.subPath }}
+          {{- end }}
         - name: st2-virtualenvs-vol
           mountPath: /opt/stackstorm/virtualenvs
           readOnly: true
+          {{- if .Values.st2.packs.persistentVolumes.venvs.subPath }}
+          subPath: {{ .Values.st2.packs.persistentVolumes.venvs.subPath }}
+          {{- end }}
         {{- end }}
         resources:
 {{ toYaml .Values.st2actionrunner.resources | indent 10 }}
@@ -1307,9 +1325,15 @@ spec:
         - name: st2-packs-vol
           mountPath: /opt/stackstorm/packs
           readOnly: true
+          {{- if .Values.st2.packs.persistentVolumes.packs.subPath }}
+          subPath: {{ .Values.st2.packs.persistentVolumes.packs.subPath }}
+          {{- end }}
         - name: st2-virtualenvs-vol
           mountPath: /opt/stackstorm/virtualenvs
           readOnly: true
+          {{- if .Values.st2.packs.persistentVolumes.venvs.subPath }}
+          subPath: {{ .Values.st2.packs.persistentVolumes.venvs.subPath }}
+          {{- end }}
         {{- end }}
         command:
           - 'bash'

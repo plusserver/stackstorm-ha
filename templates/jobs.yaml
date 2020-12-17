@@ -361,8 +361,14 @@ spec:
         {{- if .Values.st2.packs.images }}
         - name: st2-packs-vol
           mountPath: /opt/stackstorm/packs/
+          {{- if .Values.st2.packs.persistentVolumes.packs.subPath }}
+          subPath: {{ .Values.st2.packs.persistentVolumes.packs.subPath }}
+          {{- end }}
         - name: st2-virtualenvs-vol
           mountPath: /opt/stackstorm/virtualenvs/
+          {{- if .Values.st2.packs.persistentVolumes.venvs.subPath }}
+          subPath: {{ .Values.st2.packs.persistentVolumes.venvs.subPath }}
+          {{- end }}
         {{- end }}
         # TODO: Find out default resource limits for this specific service (#5)
         #resources:
