@@ -120,8 +120,10 @@ Create the name of the stackstorm-ha service account to use
     - 'sh'
     - '-ec'
     - |
-      /bin/cp -aR /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
-      /bin/cp -aR /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
+      for f in $(ls -1 /opt/stackstorm/packs/ | grep -vE '^(chatops|core|default|linux|packs)$'); do
+        /usr/bin/rsync -a --delete /opt/stackstorm/packs/$f /opt/stackstorm/packs-shared/ &&
+        /usr/bin/rsync -a --delete /opt/stackstorm/virtualenvs/$f /opt/stackstorm/virtualenvs-shared/;
+      done; /bin/true
   {{- end }}
 # System packs
 - name: st2-system-packs
@@ -142,8 +144,10 @@ Create the name of the stackstorm-ha service account to use
     - 'sh'
     - '-ec'
     - |
-      /bin/cp -aR /opt/stackstorm/packs/. /opt/stackstorm/packs-shared &&
-      /bin/cp -aR /opt/stackstorm/virtualenvs/. /opt/stackstorm/virtualenvs-shared
+      for f in /opt/stackstorm/packs/*; do
+        /usr/bin/rsync -a --delete /opt/stackstorm/packs/$(/usr/bin/basename $f) /opt/stackstorm/packs-shared/ &&
+        /usr/bin/rsync -a --delete /opt/stackstorm/virtualenvs/$(/usr/bin/basename $f) /opt/stackstorm/virtualenvs-shared/;
+      done; /bin/true
   {{- end }}
 {{- end -}}
 
