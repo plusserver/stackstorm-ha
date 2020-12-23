@@ -118,7 +118,7 @@ Create the name of the stackstorm-ha service account to use
     {{- end }}
   command:
     - 'sh'
-    - '-ec'
+    - '-c'
     - |
       for f in $(ls -1 /opt/stackstorm/packs/ | grep -vE '^(chatops|core|default|linux|packs)$'); do
         /usr/bin/rsync -a --delete /opt/stackstorm/packs/$f /opt/stackstorm/packs-shared/;
@@ -142,7 +142,7 @@ Create the name of the stackstorm-ha service account to use
     {{- end }}
   command:
     - 'sh'
-    - '-ec'
+    - '-c'
     - |
       for f in /opt/stackstorm/packs/*; do
         /usr/bin/rsync -a --delete /opt/stackstorm/packs/$(/usr/bin/basename $f) /opt/stackstorm/packs-shared/;
