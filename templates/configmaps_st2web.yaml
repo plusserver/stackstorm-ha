@@ -1,11 +1,11 @@
-{{- if .Values.st2web.config }}
+{{- if .Values.st2web.root_files }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-st2web-config
+  name: {{ .Release.Name }}-st2web-root-files
   annotations:
-    description: Custom StackStorm Web config which will override defaults
+    description: Custom StackStorm Web root files which will override defaults
   labels:
     app: st2
     tier: backend
@@ -15,8 +15,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  # User-defined st2web config with custom settings to replace default config.js
-  # See https://github.com/StackStorm/st2web#connecting-to-st2-server for more info
-  st2web.config.js: |
-{{ .Values.st2web.config | indent 4 }}
+{{- range .Values.st2web.root_files }}
+  st2web.root_files.{{ .file }}: {{ quote .content }}
+{{- end }}
 {{- end }}
