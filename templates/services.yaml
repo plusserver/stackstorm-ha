@@ -135,3 +135,33 @@ spec:
   - protocol: TCP
     port: 8081
 {{- end }}
+{{ if .Values.st2sensorcontainer.expose_ports -}}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-st2sensorcontainer{{ template "enterpriseSuffix" . }}
+  annotations:
+    description: StackStorm st2sensorcontainer, - conversation-driven automation service exposed as hubot instance with predefined list of chat adapters
+  labels:
+    app: st2sensorcontainer
+    tier: backend
+    vendor: stackstorm
+    support: {{ template "supportMethod" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    app: st2sensorcontainer
+    support: {{ template "supportMethod" . }}
+    release: {{ .Release.Name }}
+  type: ClusterIP
+  ports:
+  {{- range .Values.st2sensorcontainer.expose_ports }}
+  - name: st2sensorcontainer-port-{{ . }}
+    port: {{ . }}
+    protocol: TCP
+    targetPort: {{ . }}
+  {{- end }}
+{{- end }}

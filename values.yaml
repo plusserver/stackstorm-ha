@@ -452,6 +452,15 @@ st2chatops:
     attach: false
 
 ##
+## List of ports (tcp) to expose as service from sensorcontainer
+##
+st2sensorcontainer:
+  expose_ports: ~
+  ## e.g.:
+  # expose_ports:
+  #  - 6000
+
+##
 ## MongoDB HA configuration (3rd party chart dependency)
 ##
 ## For values.yaml reference:
