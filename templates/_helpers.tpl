@@ -75,6 +75,7 @@ Create the name of the stackstorm-ha service account to use
     {{- $mongo_fullname }}-{{ $index0 }}.{{ $mongo_fullname }}{{ if ne $index1 $replicas }},{{ end }}
   {{- end -}}
 {{- end -}}
+{{- end -}}
 
 # For custom st2packs-Container reduce duplicity by defining it here once
 {{- define "packs-volumes" -}}
