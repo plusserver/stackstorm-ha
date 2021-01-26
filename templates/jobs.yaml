@@ -346,6 +346,11 @@ spec:
           - 'sh'
           - '-ec'
           - |
+            {{- if .Values.st2.packs.preRegisterContentCommands.enabled }}
+            {{- range .Values.st2.packs.preRegisterContentCommands.commands }}
+            {{ . }} ;
+            {{- end }}
+            {{- end }}
             st2-register-content --config-file=/etc/st2/st2.conf --config-file=/etc/st2/st2.docker.conf --config-file=/etc/st2/st2.user.conf --register-all --register-fail-on-failure ;
             st2-register-content --config-file=/etc/st2/st2.conf --config-file=/etc/st2/st2.docker.conf --config-file=/etc/st2/st2.user.conf --register-all --register-fail-on-failure ;
         volumeMounts:

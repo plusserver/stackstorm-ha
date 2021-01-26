@@ -95,6 +95,13 @@ st2:
         ---
         # example core pack config yaml
 
+    # Commands to be called before register-content is executed.
+    # Maybe used as a workaround for https://github.com/StackStorm/st2/issues/3973.
+    preRegisterContentCommands:
+      enabled: false
+      # commands:
+      #   - "sed -ie 's/enabled: true$/enabled: false/' /opt/stackstorm/packs/linux/sensors/file_watch_sensor.yaml"
+
     # Custom packs images settings.
     # For each given st2packs container you can define repository, name, tag and pullPolicy for this image below.
     # Multiple pack images can help when dealing with frequent updates by only rebuilding smaller images for desired packs
